@@ -16,8 +16,8 @@ public class Cliente {
 
         // ingreso de la ruta de la carpeta "enviado"
         System.out.print("Ingrese la ruta de la carpeta 'enviado': ");
-        String carpetaPath = scanner.nextLine();
-        File carpetaEnviado = new File(carpetaPath);
+        String rutaCarpeta = scanner.nextLine();
+        File carpetaEnviado = new File(rutaCarpeta);
 
         if (!carpetaEnviado.exists() || !carpetaEnviado.isDirectory()) {
             System.out.println("La carpeta no existe o no es válida");
