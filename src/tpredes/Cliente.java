@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Cliente {
-    private static final String servidor = "192.168.0.99";
+    private static final String servidor = "192.168.0.254";
     private static final int puerto = 5000;
 
     public static void main(String[] args) {
@@ -18,7 +18,8 @@ public class Cliente {
         System.out.print("Ingrese la ruta de la carpeta 'enviado': ");
         String rutaCarpeta = scanner.nextLine();
         File carpetaEnviado = new File(rutaCarpeta);
-
+        scanner.close();
+        
         if (!carpetaEnviado.exists() || !carpetaEnviado.isDirectory()) {
             System.out.println("La carpeta no existe o no es válida");
             System.out.println("Creando la carpeta");
