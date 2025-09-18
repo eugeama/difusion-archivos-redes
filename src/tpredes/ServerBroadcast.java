@@ -7,35 +7,35 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerBroadcast {
-    private static final int PORT = 5000;
-    private static final Set<ClientHandler> clients = ConcurrentHashMap.newKeySet();
+    private static final int puerto = 5000;
+    private static final Set<ClientHandler> clientes = ConcurrentHashMap.newKeySet();
 
     public static void main(String[] args) {
-        System.out.println("Servidor iniciado en el puerto " + PORT);
+        System.out.println("Servidor iniciado en el puerto " + puerto);
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(puerto)) {
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                ClientHandler handler = new ClientHandler(clientSocket);
-                clients.add(handler);
+                Socket socketCliente = serverSocket.accept();
+                ClientHandler handler = new ClientHandler(socketCliente);
+                clientes.add(handler);
                 new Thread(handler).start();
-                System.out.println("Nuevo cliente conectado: " + clientSocket.getInetAddress());
+                System.out.println("Nuevo cliente conectado: " + socketCliente.getInetAddress());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Método para enviar archivo a todos los clientes
-    public static void broadcastFile(String fileName, byte[] fileData, ClientHandler sender) {
-        for (ClientHandler client : clients) {
-            if (client != sender) { // si no querés que se reenvíe al emisor
-                client.sendFile(fileName, fileData);
+    // para hacer que la comunicacion con el server sea broadcast
+    public static void broadcast(String nombreArchivo, byte[] dataArchivo, ClientHandler emisor) {
+        for (ClientHandler cliente : clientes) {
+            if (cliente != emisor) {
+                cliente.mandarArchivo(nombreArchivo, dataArchivo);
             }
         }
     }
 
-    // Handler para cada cliente
+
     static class ClientHandler implements Runnable {
         private Socket socket;
         private DataInputStream in;
@@ -54,36 +54,30 @@ public class ServerBroadcast {
         public void run() {
             try {
                 while (true) {
-                    // Recibir nombre del archivo
-                    String fileName = in.readUTF();
 
-                    // Recibir tamaño del archivo
-                    long fileSize = in.readLong();
+                    String nombreArchivo = in.readUTF();
+                    long tamanioArchivo = in.readLong();
+                    byte[] dataArchivo = new byte[(int) tamanioArchivo];
+                    in.readFully(dataArchivo);
 
-                    // Recibir contenido
-                    byte[] fileData = new byte[(int) fileSize];
-                    in.readFully(fileData);
-
-                    System.out.println("Archivo recibido: " + fileName + " (" + fileSize + " bytes)");
-
-                    // Reenviar a todos los clientes
-                    ServerBroadcast.broadcastFile(fileName, fileData, this);
+                    System.out.println("Archivo recibido: " + nombreArchivo + " (" + tamanioArchivo + " bytes)");
+                    ServerBroadcast.broadcast(nombreArchivo, dataArchivo, this);
                 }
             } catch (IOException e) {
                 System.out.println("Cliente desconectado: " + socket.getInetAddress());
-                clients.remove(this);
+                clientes.remove(this);
             }
         }
 
-        public void sendFile(String fileName, byte[] fileData) {
+        public void mandarArchivo(String nombreArchivo, byte[] dataArchivo) {
             try {
-                out.writeUTF(fileName);
-                out.writeLong(fileData.length);
-                out.write(fileData);
+                out.writeUTF(nombreArchivo);
+                out.writeLong(dataArchivo.length);
+                out.write(dataArchivo);
                 out.flush();
             } catch (IOException e) {
-                System.out.println("Error al enviar archivo a cliente.");
-                clients.remove(this);
+                System.out.println("Error al enviar archivo a cliente");
+                clientes.remove(this);
             }
         }
     }

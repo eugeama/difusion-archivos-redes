@@ -12,18 +12,18 @@ public class ReceptorArchivo implements Runnable {
     public void run() {
         try {
                     while (true) {
-                        String fileName = in.readUTF();
-                        long fileSize = in.readLong();
+                        String nombreArchivo = in.readUTF();
+                        long tamanioArchivo = in.readLong();
 
-                        byte[] fileData = new byte[(int) fileSize];
-                        in.readFully(fileData);
+                        byte[] dataArchivo = new byte[(int) tamanioArchivo];
+                        in.readFully(dataArchivo);
 
                         // Guardar archivo en la carpeta "enviado" indicada
-                        File file = new File(carpetaEnviado, fileName);
-                        try (FileOutputStream fos = new FileOutputStream(file)) {
-                            fos.write(fileData);
+                        File archivo = new File(carpetaEnviado, nombreArchivo);
+                        try (FileOutputStream fos = new FileOutputStream(archivo)) {
+                            fos.write(dataArchivo);
                         }
-                        System.out.println("Archivo recibido y guardado en: " + file.getAbsolutePath());
+                        System.out.println("Archivo recibido y guardado en: " + archivo.getAbsolutePath());
                     }
                 } catch (IOException e) {
                     System.out.println("Conexión cerrada");

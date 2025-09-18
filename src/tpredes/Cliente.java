@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Cliente {
-    private static final String SERVER = "192.168.0.99"; // Cambiar IP si no es local
-    private static final int PORT = 5000;
+    private static final String servidor = "192.168.0.99";
+    private static final int puerto = 5000;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Pedir al usuario la ruta de la carpeta "enviado"
+        // ingreso de la ruta de la carpeta "enviado"
         System.out.print("Ingrese la ruta de la carpeta 'enviado': ");
         String carpetaPath = scanner.nextLine();
         File carpetaEnviado = new File(carpetaPath);
@@ -25,37 +25,37 @@ public class Cliente {
             carpetaEnviado.mkdirs();
         }
 
-        try (Socket socket = new Socket(SERVER, PORT)) {
+        try (Socket socket = new Socket(servidor, puerto)) {
             DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-            // Thread para recibir archivos
+            // hilo para recibir los archivos
             ReceptorArchivo receptorArchivo = new ReceptorArchivo(in, carpetaEnviado);
             Thread hiloReceptorArchivo = new Thread(receptorArchivo);
             hiloReceptorArchivo.start();
 
-            // Scanner para enviar archivos manualmente
+            // ingreso de la rutade los archivos para enviarlos
             while (true) {
                 System.out.print("Ingrese la ruta del archivo para enviar: ");
-                String path = scanner.nextLine();
-                File file = new File(path);
+                String ruta = scanner.nextLine();
+                File archivo = new File(ruta);
 
-                if (!file.exists()) {
+                if (!archivo.exists()) {
                     System.out.println("El archivo no existe");
                     continue;
                 }
 
-                byte[] fileData = new byte[(int) file.length()];
-                try (FileInputStream fis = new FileInputStream(file)) {
-                    fis.read(fileData);
+                byte[] dataArchivo = new byte[(int) archivo.length()];
+                try (FileInputStream fis = new FileInputStream(archivo)) {
+                    fis.read(dataArchivo);
                 }
 
-                out.writeUTF(file.getName());
-                out.writeLong(fileData.length);
-                out.write(fileData);
+                out.writeUTF(archivo.getName());
+                out.writeLong(dataArchivo.length);
+                out.write(dataArchivo);
                 out.flush();
 
-                System.out.println("Archivo enviado: " + file.getName());
+                System.out.println("Archivo enviado: " + archivo.getName());
             }
         } catch (IOException e) {
             e.printStackTrace();
