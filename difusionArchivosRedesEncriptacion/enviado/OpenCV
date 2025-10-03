@@ -1,0 +1,6 @@
+25/06/25
+Hoy investigamos sobre cómo ejecutar videos usando python. Anteriormente, nos enfocamos en buscar herramientas para hacer la interfaz, con Tkinter 
+inicialmente que también utiliza python. Sin embargo, nos dimos cuenta de que tendría más sentido comenzar a anclar la idea que tenemos de reproducir 
+un video que elija un usuario (el de la letra de la canción) y el que genera el karaoke con la cámara web.
+Así que fuimos buscando en youtube librerías que permitan justamente eso, y encontramos OpenCV.
+
