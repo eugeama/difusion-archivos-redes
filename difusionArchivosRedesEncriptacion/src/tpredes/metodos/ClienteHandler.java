@@ -5,18 +5,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
 class ClienteHandler implements Runnable {
     private Socket socket;
     private DataInputStream in;
-    private DataOutputStream out;
-    private HashSet<ClienteHandler> clientes;
+    private static DataOutputStream out;
+    private static HashSet<ClienteHandler> clientes;
     private SecretKey claveAleatoria;
     private KeyPair parLlave;
 
@@ -50,27 +47,15 @@ class ClienteHandler implements Runnable {
         byte[] dataArchivo = new byte[(int) tamanioArchivo];
         in.readFully(dataArchivo);
 
-        encriptar(datosNombre, dataArchivo);
+        EncriptacionSimetrica.encriptarClaveAleatoria(datosNombre, dataArchivo, claveAleatoria, parLlave);
     }
 
-    public void encriptar(byte[] dataNombre, byte[] dataArchivo) throws Exception {
-        Cipher tipoCifrado=Cipher.getInstance("AES");
-        LlaveAleatoria generador = new LlaveAleatoria();
-        SecretKey llaveAleatoriaSim = generador.generarLlave();
-
-        tipoCifrado.init(Cipher.ENCRYPT_MODE,llaveAleatoriaSim);
-
-        byte[] nombreEncriptado= tipoCifrado.doFinal(dataNombre);
-        byte[] datosEncriptados= tipoCifrado.doFinal(dataArchivo);
-
-        mandarArchivo(nombreEncriptado, datosEncriptados);
-    }
-
-    public void mandarArchivo(byte[] nombreEnc, byte[] datosEnc) {
+    public static void mandarArchivo(byte[] nombreEncPub, byte[] datosEncPub, byte[] llaveAlEncPub) {
         try {
-            out.writeUTF(Arrays.toString(nombreEnc));
-            out.writeLong(datosEnc.length);
-            out.write(datosEnc);
+            out.writeUTF(Arrays.toString(nombreEncPub));
+            out.writeLong(datosEncPub.length);
+            out.write(datosEncPub);
+            out.write(llaveAlEncPub);
             out.flush();
         } catch (IOException e) {
             clientes.remove(this);
