@@ -47,10 +47,19 @@ class ClienteHandler implements Runnable {
         byte[] dataArchivo = new byte[(int) tamanioArchivo];
         in.readFully(dataArchivo);
 
-        EncriptacionSimetrica.encriptarClaveAleatoria(datosNombre, dataArchivo, claveAleatoria, parLlave);
+        EncriptacionSimetrica.EncryptedData datosEnc = EncriptacionSimetrica.encriptarClaveAleatoria(
+                datosNombre,
+                dataArchivo,
+                claveAleatoria,
+                parLlave
+        );
+
+
+        mandarArchivo(datosEnc.nombre, datosEnc.datos, datosEnc.clave);
     }
 
-    public static void mandarArchivo(byte[] nombreEncPub, byte[] datosEncPub, byte[] llaveAlEncPub) {
+
+    public void mandarArchivo(byte[] nombreEncPub, byte[] datosEncPub, byte[] llaveAlEncPub) {
         try {
             out.writeUTF(Arrays.toString(nombreEncPub));
             out.writeLong(datosEncPub.length);
