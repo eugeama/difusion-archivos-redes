@@ -1,31 +1,12 @@
 package metodos;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class Llave {
-    static SecretKey llave;
+public class LlaveAleatoria {
 
-    public Llave(SecretKey llave) {
-        this.llave = llave;
-    }
-
-    public Llave() {
-    }
-
-    public SecretKey getLlave() {
-        return llave;
-    }
-
-    public void setLlave(SecretKey llave) {
-        this.llave = llave;
-    }
-
-    public SecretKey generarLlave() throws NoSuchAlgorithmException {
+    public static SecretKey generarLlave() throws NoSuchAlgorithmException {
         try {
             KeyGenerator generadorDeLlave = KeyGenerator.getInstance("AES");
             generadorDeLlave.init(128);

@@ -5,8 +5,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -15,10 +17,14 @@ class ClienteHandler implements Runnable {
     private DataInputStream in;
     private DataOutputStream out;
     private HashSet<ClienteHandler> clientes;
+    private SecretKey claveAleatoria;
+    private KeyPair parLlave;
 
-    public ClienteHandler(Socket socket, HashSet<ClienteHandler> clientes) {
+    public ClienteHandler(Socket socket, HashSet<ClienteHandler> clientes) throws NoSuchAlgorithmException {
         this.socket = socket;
         this.clientes = clientes;
+        this.claveAleatoria= LlaveAleatoria.generarLlave();
+        this.parLlave= LlavePubPriv.generarYRetornarParLlaves();
         try {
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
@@ -49,10 +55,10 @@ class ClienteHandler implements Runnable {
 
     public void encriptar(byte[] dataNombre, byte[] dataArchivo) throws Exception {
         Cipher tipoCifrado=Cipher.getInstance("AES");
-        Llave generador = new Llave();
-        SecretKey nuevaLlave = generador.generarLlave();
+        LlaveAleatoria generador = new LlaveAleatoria();
+        SecretKey llaveAleatoriaSim = generador.generarLlave();
 
-        tipoCifrado.init(Cipher.ENCRYPT_MODE,nuevaLlave);
+        tipoCifrado.init(Cipher.ENCRYPT_MODE,llaveAleatoriaSim);
 
         byte[] nombreEncriptado= tipoCifrado.doFinal(dataNombre);
         byte[] datosEncriptados= tipoCifrado.doFinal(dataArchivo);
