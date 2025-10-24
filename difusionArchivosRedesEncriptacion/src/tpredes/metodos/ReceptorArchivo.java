@@ -18,7 +18,7 @@ public class ReceptorArchivo implements Runnable {
 
     public void desencriptar() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         Cipher tipoCifrado=Cipher.getInstance("AES");
-        tipoCifrado.init(Cipher.DECRYPT_MODE,"faltalallaveserver");
+        //tipoCifrado.init(Cipher.DECRYPT_MODE,"faltalallaveserver");
     }
 
     public void leerArchivo() throws IOException {
@@ -43,13 +43,13 @@ public class ReceptorArchivo implements Runnable {
 
     @Override
     public void run() {
-        try {
-            while (true) {
-                desencriptar();
-            }
-        } catch (IOException e) {
-            System.out.println("Conexión cerrada");
-        }
+      //  try {
+        //    while (true) {
+               // desencriptar();
+          //  }
+       // } catch (IOException e) {
+           // System.out.println("Conexión cerrada");
+    //    }
     }
 
 }

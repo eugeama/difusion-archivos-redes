@@ -22,6 +22,38 @@ public class  ServerBroadcast {
         this.clientes = clientes;
     }
 
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+
+    public KeyPair getParLlave() {
+        return parLlave;
+    }
+
+    public void setParLlave(KeyPair parLlave) {
+        this.parLlave = parLlave;
+    }
+
+    public SecretKey getClaveAleatoria() {
+        return claveAleatoria;
+    }
+
+    public void setClaveAleatoria(SecretKey claveAleatoria) {
+        this.claveAleatoria = claveAleatoria;
+    }
+
+    public HashSet<ClienteHandler> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(HashSet<ClienteHandler> clientes) {
+        this.clientes = clientes;
+    }
+
     public ServerBroadcast(int puerto) {
         this.puerto = puerto;
 
