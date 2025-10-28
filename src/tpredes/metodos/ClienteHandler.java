@@ -12,7 +12,8 @@ import java.util.HashSet;
 class ClienteHandler implements Runnable {
     private Socket socket;
     private DataInputStream in;
-    private static DataOutputStream out;
+    private static DataOutputStream outSimetrico;
+    private static DataOutputStream outAsimetrico;
     private static HashSet<ClienteHandler> clientes;
     private SecretKey claveAleatoria;
     private KeyPair parLlave;
@@ -24,7 +25,8 @@ class ClienteHandler implements Runnable {
         this.parLlave= LlavePubPriv.generarYRetornarParLlaves();
         try {
             this.in = new DataInputStream(socket.getInputStream());
-            this.out = new DataOutputStream(socket.getOutputStream());
+            this.outSimetrico = new DataOutputStream(socket.getOutputStream());
+            this.outAsimetrico = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,7 +39,8 @@ class ClienteHandler implements Runnable {
         this.parLlave= LlavePubPriv.generarYRetornarParLlaves();
         try {
             this.in = new DataInputStream(socket.getInputStream());
-            this.out = new DataOutputStream(socket.getOutputStream());
+            this.outSimetrico = new DataOutputStream(socket.getOutputStream());
+            this.outAsimetrico= new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,12 +62,20 @@ class ClienteHandler implements Runnable {
         this.in = in;
     }
 
-    public static DataOutputStream getOut() {
-        return out;
+    public static DataOutputStream getOutSimetrico() {
+        return outSimetrico;
     }
 
-    public static void setOut(DataOutputStream out) {
-        ClienteHandler.out = out;
+    public static void setOutSimetrico(DataOutputStream outSimetrico) {
+        ClienteHandler.outSimetrico = outSimetrico;
+    }
+
+    public static DataOutputStream getOutAsimetrico() {
+        return outAsimetrico;
+    }
+
+    public static void setOutAsimetrico(DataOutputStream outAsimetrico) {
+        ClienteHandler.outAsimetrico = outAsimetrico;
     }
 
     public static HashSet<ClienteHandler> getClientes() {
@@ -109,7 +120,7 @@ class ClienteHandler implements Runnable {
         in.readFully(dataArchivo);
 
         encriptarDatosSim(datosNombre, dataArchivo);
-        encriptarDatosAsim(datosNombre, dataArchivo);
+        encriptarDatosAsimetrico(datosNombre, dataArchivo);
     }
 
     public void encriptarDatosSim(byte[] datosNombre, byte[] datosArchivo) throws Exception {
@@ -119,28 +130,30 @@ class ClienteHandler implements Runnable {
 
     public void mandarMensajeSimetrico(byte[] nombreEncPub, byte[] datosEncPub, byte[] llaveAlEncPub) {
         try {
-            out.writeUTF(Arrays.toString(nombreEncPub));
-            out.writeLong(datosEncPub.length);
-            out.write(datosEncPub);
-            out.write(llaveAlEncPub);
-            out.flush();
+            outSimetrico.writeUTF("SIM");
+            outSimetrico.writeUTF(Arrays.toString(nombreEncPub));
+            outSimetrico.writeLong(datosEncPub.length);
+            outSimetrico.write(datosEncPub);
+            outSimetrico.write(llaveAlEncPub);
+            outSimetrico.flush();
         } catch (IOException e) {
             clientes.remove(this);
         }
     }
 
-    public void encriptarDatosAsim(byte[] datosNombre, byte[] datosArchivo) throws Exception{
+    public void encriptarDatosAsimetrico(byte[] datosNombre, byte[] datosArchivo) throws Exception{
         EncriptacionAsimetrica encripAsim= new EncriptacionAsimetrica();
 
         encripAsim.hashearYFirmar(datosNombre, datosArchivo);
     }
 
-    public void mandarMensajeAsim(byte[] nombreFirmado, byte[] datosFirmado) {
+    public void mandarMensajeAsimetrico(byte[] nombreFirmado, byte[] datosFirmado) {
         try {
-            out.writeUTF(Arrays.toString(nombreFirmado));
-            out.writeLong(datosFirmado.length);
-            out.write(datosFirmado);
-            out.flush();
+            outAsimetrico.writeUTF("ASIM");
+            outAsimetrico.writeUTF(Arrays.toString(nombreFirmado));
+            outAsimetrico.writeLong(datosFirmado.length);
+            outAsimetrico.write(datosFirmado);
+            outAsimetrico.flush();
         } catch (IOException e) {
             clientes.remove(this);
         }

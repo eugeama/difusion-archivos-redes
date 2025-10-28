@@ -1,9 +1,6 @@
 package metodos;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
-import java.util.Base64;
 
 public class EncriptacionAsimetrica {
     private ServerBroadcast server;
@@ -38,6 +35,6 @@ public class EncriptacionAsimetrica {
         byte[] firmaDigitalDatos= firmaDatos.sign();
 
         ClienteHandler manejoCliente= new ClienteHandler();
-        manejoCliente.mandarMensajeAsim(firmaDigitalNombre, firmaDigitalDatos);
+        manejoCliente.mandarMensajeAsimetrico(firmaDigitalNombre, firmaDigitalDatos);
     }
 }

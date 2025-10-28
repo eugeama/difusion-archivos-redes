@@ -22,12 +22,25 @@ public class ReceptorArchivo implements Runnable {
     }
 
     public void leerArchivo() throws IOException {
+        String tipo = in.readUTF();
         String nombreArchivo = in.readUTF();
         long tamanioArchivo = in.readLong();
         byte[] dataArchivo = new byte[(int) tamanioArchivo];
         in.readFully(dataArchivo);
+       determinarArchivos(tipo, nombreArchivo, tamanioArchivo, dataArchivo);
+    }
 
-       guardarArchivo(nombreArchivo, dataArchivo);
+    public void determinarArchivos(String tipo, String nombre, Long tamaño, byte[] datos) {
+        if (tipo.equals("SIM")) {
+            System.out.println("Recibido archivo cifrado simetrica: " + nombre);
+            desencriptarSim(dataArchivo);
+        } else if (tipo.equals("ASIM")) {
+            System.out.println("Recibido archivo cifrado asimetrica: " + nombre);
+            verificarFirmaAsim(dataArchivo);
+        } else {
+            System.out.println("Tipo de archivo desconocido: " + tipo);
+        }
+
     }
 
     public void guardarArchivo(String nombreArchivo, byte[]datosArchivo ){
