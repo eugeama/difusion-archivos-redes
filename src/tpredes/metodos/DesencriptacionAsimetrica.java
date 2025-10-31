@@ -13,4 +13,11 @@ public class DesencriptacionAsimetrica {
 
         return cipher.doFinal(dataArchivo);
     }
+
+    public static byte[] desencriptarAsimetricamenteNombreArchivo(byte[]nombreArchivo, PublicKey publicaEmisor) throws Exception{
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, publicaEmisor);
+
+        return cipher.doFinal(nombreArchivo);
+    }
 }
