@@ -9,11 +9,18 @@ import java.security.NoSuchAlgorithmException;
 
 public class ReceptorArchivo implements Runnable {
     private DataInputStream in;
-    private File carpetaEnviado;
+    private File carpetaEnviadoSimetrico;
+    private File carpetaEnviadoAsimetrico;
+
+    public ReceptorArchivo(DataInputStream in, File carpetaEnviadoSimetrico, File carpetaEnviadoAsimetrico) {
+        this.in = in;
+        this.carpetaEnviadoSimetrico = carpetaEnviadoSimetrico;
+        this.carpetaEnviadoAsimetrico = carpetaEnviadoAsimetrico;
+    }
 
     public ReceptorArchivo(DataInputStream in, File carpetaEnviado) {
         this.in = in;
-        this.carpetaEnviado = carpetaEnviado;
+
     }
 
     public void desencriptar() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
@@ -27,24 +34,19 @@ public class ReceptorArchivo implements Runnable {
         long tamanioArchivo = in.readLong();
         byte[] dataArchivo = new byte[(int) tamanioArchivo];
         in.readFully(dataArchivo);
-       determinarArchivos(tipo, nombreArchivo, tamanioArchivo, dataArchivo);
+       guardarArchivo(nombreArchivo, dataArchivo, tipo);
     }
 
-    public void determinarArchivos(String tipo, String nombre, Long tamaño, byte[] datos) {
-        if (tipo.equals("SIM")) {
-            System.out.println("Recibido archivo cifrado simetrica: " + nombre);
-            desencriptarSim(dataArchivo);
-        } else if (tipo.equals("ASIM")) {
-            System.out.println("Recibido archivo cifrado asimetrica: " + nombre);
-            verificarFirmaAsim(dataArchivo);
-        } else {
-            System.out.println("Tipo de archivo desconocido: " + tipo);
+    public void guardarArchivo(String nombreArchivo, byte[]datosArchivo, String tipo){
+        File archivo;
+        if(tipo.equals("SIM")){
+            archivo = new File(carpetaEnviadoSimetrico, nombreArchivo);
+        }
+        else {
+            archivo = new File(carpetaEnviadoAsimetrico, nombreArchivo);
         }
 
-    }
 
-    public void guardarArchivo(String nombreArchivo, byte[]datosArchivo ){
-        File archivo = new File(carpetaEnviado, nombreArchivo);
         try (FileOutputStream fos = new FileOutputStream(archivo)) {
             fos.write(datosArchivo);
         } catch (FileNotFoundException e) {
