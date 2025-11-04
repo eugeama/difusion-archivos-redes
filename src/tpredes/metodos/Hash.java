@@ -13,8 +13,8 @@ public class Hash {
         }
     }
 
-    public byte[] hashearDatos(byte[] datos) {
+    public byte[] hashearDatos(byte[] datos)throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return tipoHash.digest(datos);
-
     }
 }
