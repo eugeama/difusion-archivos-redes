@@ -72,25 +72,33 @@ public class ReceptorArchivo implements Runnable {
     @Override
     public void run() {
         try {
-            EncriptacionSimetrica sim = new EncriptacionSimetrica();
-            EncriptacionAsimetrica asim = new EncriptacionAsimetrica();
+            EncriptacionSimetrica encriptacionSimetrica = new EncriptacionSimetrica();
+            EncriptacionAsimetrica encriptacionAsimetrica = new EncriptacionAsimetrica();
 
             while(true) {
-                if(hashesSonIguales(sim.getHashSimetrico(), asim.getHashAsimetrico())) {
-                    String nombreArchivo = this.in.readUTF();
-                    long tamanioArchivo = this.in.readLong();
-                    byte[] dataArchivo = new byte[(int) tamanioArchivo];
-                    this.in.readFully(dataArchivo);
-                    File archivo = new File(this.carpetaEnviadoAsimetrico, nombreArchivo);
-                    try (FileOutputStream fos = new FileOutputStream(archivo)) {
-                        fos.write(dataArchivo);
-                    }
-                    System.out.println("Archivo recibido y guardado en: " + archivo.getAbsolutePath());
+            String nombreArchivo = this.in.readUTF();
+            long tamanioArchivo = this.in.readLong();
+            byte[] dataArchivo = new byte[(int) tamanioArchivo];
+            this.in.readFully(dataArchivo);
+            encriptacionSimetrica.hashearArchivoSimetrico(dataArchivo);
+            encriptacionAsimetrica.hashearYFirmar(nombreArchivo.getBytes(), dataArchivo);
+            File archivo = new File(this.carpetaEnviadoAsimetrico, nombreArchivo);
+
+                if (hashesSonIguales(encriptacionSimetrica.getHashSimetrico(), encriptacionAsimetrica.getHashAsimetrico())) {
+                    guardarArchivo(nombreArchivo, dataArchivo, "ASIM");
                 }
+
+                try (FileOutputStream fos = new FileOutputStream(archivo)) {
+                fos.write(dataArchivo);
+            }
+            System.out.println("Archivo recibido y guardado en: " + archivo.getAbsolutePath());
+
             }
         } catch (IOException var11) {
             System.out.println("Conexión cerrada");
         } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
