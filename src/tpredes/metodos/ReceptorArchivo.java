@@ -59,7 +59,7 @@ public class ReceptorArchivo implements Runnable {
 
     public boolean compararHashes(byte[] datosHasheados1, byte[] datosHasheados2){
         boolean verificacion = false;
-        if(Arrays.equals(datosHasheados1, datosHasheados2)){
+        if(datosHasheados1==datosHasheados2){
             verificacion = true;
         }
 
