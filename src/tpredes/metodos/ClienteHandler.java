@@ -162,6 +162,7 @@ class ClienteHandler implements Runnable {
     public void run() {
         try {
             while (true) {
+
                 mandarArchivosCLientes(this);
                 //no se si dejar esto
                 //System.out.println("Archivo recibido: " + nombreArchivo + " (" + tamanioArchivo + " bytes)");

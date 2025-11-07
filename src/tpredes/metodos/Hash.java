@@ -19,4 +19,6 @@ public class Hash {
         return tipoHash.digest(datos);
     }
 
+
+
 }

@@ -4,6 +4,11 @@ import java.security.Signature;
 
 public class EncriptacionAsimetrica {
     private ServerBroadcast server;
+    private byte[] hashAsimetrico;
+
+    public byte[] getHashAsimetrico() {
+        return hashAsimetrico;
+    }
 
     public ServerBroadcast getServer() {
         return server;
@@ -17,6 +22,7 @@ public class EncriptacionAsimetrica {
         Hash hashear = new Hash();
         byte[] nombreHash= hashear.hashearDatos(dataNombre);
         byte[] datosHash= hashear.hashearDatos(dataArchivo);
+        this.hashAsimetrico = hashear.hashearDatos(dataArchivo);
 
         crearFirmaYFirmar(nombreHash, datosHash);
     }

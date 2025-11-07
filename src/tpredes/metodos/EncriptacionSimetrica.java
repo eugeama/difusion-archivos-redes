@@ -6,6 +6,11 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 
 public class EncriptacionSimetrica {
+    private byte[] hashSimetrico;
+
+    public byte[] getHashSimetrico() {
+        return hashSimetrico;
+    }
 
     public byte[] encriptarClavePublica(SecretKey clAleatoria, KeyPair parLlave) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher tipoCifrado=Cipher.getInstance("RSA");
@@ -30,6 +35,6 @@ public class EncriptacionSimetrica {
     public void hashearArchivoSimetrico(byte[]datosArchivo) throws NoSuchAlgorithmException {
         Hash hash = new Hash();
         hash.hashearDatos(datosArchivo);
-
+        this.hashSimetrico = hash.hashearDatos(datosArchivo);
     }
 }
