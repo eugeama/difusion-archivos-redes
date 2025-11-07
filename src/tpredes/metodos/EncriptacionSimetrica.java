@@ -26,4 +26,10 @@ public class EncriptacionSimetrica {
         ClienteHandler manejoCliente= new ClienteHandler();
         manejoCliente.mandarMensajeSimetrico(nombreEncriptado, datosEncriptados, claveEncriptada);
     }
+
+    public void hashearArchivoSimetrico(byte[]datosArchivo) throws NoSuchAlgorithmException {
+        Hash hash = new Hash();
+        hash.hashearDatos(datosArchivo);
+        System.out.println("se hasheo el archivo");
+    }
 }

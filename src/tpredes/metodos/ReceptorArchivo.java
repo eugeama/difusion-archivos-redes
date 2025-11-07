@@ -24,7 +24,7 @@ public class ReceptorArchivo implements Runnable {
     }
 
     public void desencriptar() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        Cipher tipoCifrado=Cipher.getInstance("AES");
+        Cipher tipoCifrado = Cipher.getInstance("AES");
         //tipoCifrado.init(Cipher.DECRYPT_MODE,"faltalallaveserver");
     }
 
@@ -46,7 +46,6 @@ public class ReceptorArchivo implements Runnable {
             archivo = new File(carpetaEnviadoAsimetrico, nombreArchivo);
         }
 
-
         try (FileOutputStream fos = new FileOutputStream(archivo)) {
             fos.write(datosArchivo);
         } catch (FileNotFoundException e) {
@@ -56,15 +55,18 @@ public class ReceptorArchivo implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
-      //  try {
-        //    while (true) {
-               // desencriptar();
-          //  }
-       // } catch (IOException e) {
-           // System.out.println("Conexión cerrada");
-    //    }
+    public boolean compararHashes(File archivoHasheado1, File archivoHasheado2){
+        boolean verificacion = false;
+        if(archivoHasheado1.equals(archivoHasheado2)){
+            verificacion = true;
+        }
+
+        return verificacion;
     }
 
+
+    @Override
+    public void run() {
+
+    }
 }

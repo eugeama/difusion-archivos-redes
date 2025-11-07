@@ -2,6 +2,7 @@ package metodos;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class Hash {
     private static final MessageDigest tipoHash;
@@ -17,4 +18,5 @@ public class Hash {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return tipoHash.digest(datos);
     }
+
 }
