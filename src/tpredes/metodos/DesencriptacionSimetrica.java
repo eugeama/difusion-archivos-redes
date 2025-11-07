@@ -16,21 +16,6 @@ public class DesencriptacionSimetrica {
         return claveAleatoria;
     }
 
-    //desencriptacion del archivo con la clave aleatoria
-    /*public byte[] desencriptarSimetricamenteDataArchivo(byte[] dataArchivo, SecretKey claveAleatoria) throws Exception{
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, claveAleatoria);
-
-        return cipher.doFinal(dataArchivo);
-    }
-
-    public byte[] desencriptarSimetricamenteNombreArchivo(byte[] nombreArchivo, SecretKey claveAleatoria) throws Exception{
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, claveAleatoria);
-
-        return cipher.doFinal(nombreArchivo);
-    }*/
-
     public void desencriptarSimetricamenteArchivo(byte[] nombreArchivo, byte[]dataArchivo, SecretKey claveAleatoria) throws Exception{
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, claveAleatoria);

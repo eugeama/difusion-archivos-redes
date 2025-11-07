@@ -8,21 +8,7 @@ import java.security.PublicKey;
 public class DesencriptacionAsimetrica {
     private LlavePubPriv parLlaves;
     private ReceptorArchivo receptorArchivo;
-/*
-    public byte[] desencriptarAsimetricamenteDataArchivo(byte[] dataArchivo, PublicKey publicaEmisor) throws Exception{
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, publicaEmisor);
 
-        return cipher.doFinal(dataArchivo);
-    }
-
-    public byte[] desencriptarAsimetricamenteNombreArchivo(byte[]nombreArchivo, PublicKey publicaEmisor) throws Exception{
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, publicaEmisor);
-
-        return cipher.doFinal(nombreArchivo);
-    }
-*/
     public void desencriptarAsimetricamenteArchivo(byte[]dataArchivo, byte[]nombreArchivo, PublicKey publicaEmisor) throws Exception{
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, publicaEmisor);

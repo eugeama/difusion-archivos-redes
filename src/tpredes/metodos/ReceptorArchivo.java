@@ -57,9 +57,10 @@ public class ReceptorArchivo implements Runnable {
 
     }
 
-    public boolean compararHashes(byte[] datosHasheados1, byte[] datosHasheados2){
+        public boolean hashesSonIguales(byte[] datosSimetrica, byte[] datosAsimetrica) throws NoSuchAlgorithmException {
         boolean verificacion = false;
-        if(datosHasheados1==datosHasheados2){
+
+        if(datosSimetrica==datosAsimetrica){
             verificacion = true;
         }
 
@@ -69,6 +70,20 @@ public class ReceptorArchivo implements Runnable {
 
     @Override
     public void run() {
-
+        try {
+            while(true) {
+                String nombreArchivo = this.in.readUTF();
+                long tamanioArchivo = this.in.readLong();
+                byte[] dataArchivo = new byte[(int)tamanioArchivo];
+                this.in.readFully(dataArchivo);
+                File archivo = new File(this.carpetaEnviadoAsimetrico, nombreArchivo);
+                try (FileOutputStream fos = new FileOutputStream(archivo)) {
+                    fos.write(dataArchivo);
+                }
+                System.out.println("Archivo recibido y guardado en: " + archivo.getAbsolutePath());
+            }
+        } catch (IOException var11) {
+            System.out.println("Conexión cerrada");
+        }
     }
 }
