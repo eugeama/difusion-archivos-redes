@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class ReceptorArchivo implements Runnable {
     private DataInputStream in;
@@ -53,11 +54,12 @@ public class ReceptorArchivo implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
-    public boolean compararHashes(File archivoHasheado1, File archivoHasheado2){
+    public boolean compararHashes(byte[] datosHasheados1, byte[] datosHasheados2){
         boolean verificacion = false;
-        if(archivoHasheado1.equals(archivoHasheado2)){
+        if(Arrays.equals(datosHasheados1, datosHasheados2)){
             verificacion = true;
         }
 

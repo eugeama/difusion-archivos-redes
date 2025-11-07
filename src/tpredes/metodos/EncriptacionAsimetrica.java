@@ -14,7 +14,7 @@ public class EncriptacionAsimetrica {
     }
 
     public void hashearYFirmar(byte[] dataNombre, byte[] dataArchivo) throws Exception {
-        Hash hashear= new Hash();
+        Hash hashear = new Hash();
         byte[] nombreHash= hashear.hashearDatos(dataNombre);
         byte[] datosHash= hashear.hashearDatos(dataArchivo);
 

@@ -30,6 +30,6 @@ public class EncriptacionSimetrica {
     public void hashearArchivoSimetrico(byte[]datosArchivo) throws NoSuchAlgorithmException {
         Hash hash = new Hash();
         hash.hashearDatos(datosArchivo);
-        System.out.println("se hasheo el archivo");
+
     }
 }
